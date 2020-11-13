@@ -25,11 +25,11 @@ makeCacheMatrix <- function(x = matrix()) {  ## makeCacheMatrix environment
         inv <<- NULL ## Object inv set to null
     }
     get <- function() x
-    setmean <- function(inverse) inv <<- inverse ## solvecov {fpc}
-    getmean <- function() inv
+    setinv <- function(inverse) inv <<- inverse 
+    getinv <- function() inv
     list(set = set, get = get,  ## "each element in the list is created with a elementName = value syntax"
-         setmean = setmean,
-         getmean = getmean)
+         setinv = setinv,
+         getinv = getinv)
 }
 
 
@@ -40,14 +40,14 @@ makeCacheMatrix <- function(x = matrix()) {  ## makeCacheMatrix environment
 ## Then, if inv is null, it returns the inverse of the matrix.
 
 cacheSolve <- function(x, ...) {  ## cacheSolve environment
-    inv <- x$getmean()
+    inv <- x$getinv()
     if(!is.null(inv)) {
         message("getting cached data")
         return(inv)
     }
     data <- x$get()
     inv <- solve(data, ...)
-    x$setmean(inv)
+    x$setinv(inv)
     inv
 }
 
@@ -56,20 +56,20 @@ cacheSolve <- function(x, ...) {  ## cacheSolve environment
 
 ## Source: https://www.coursera.org/learn/r-programming/discussions/weeks/3/threads/ePlO1eMdEeahzg7_4P4Vvg
 
-    ## m1 <- matrix(c(1/2, -1/4, -1, 3/4), nrow = 2, ncol = 2)
-    ## I2 <- matrix(c(1,0,0,1), nrow = 2, ncol = 2)
-    ## n1 <- matrix(c(6,2,8,4), nrow = 2, ncol = 2)
-    ## m1 %*% n1
-    ## n1 %*% m1
-    ## solve(m1)
-    ## solve(n1)
-    ## myMatrix_object <- makeCacheMatrix(m1)
-    ## cacheSolve(myMatrix_object)
-    ## cacheSolve(myMatrix_object)
-    ## n2 <- matrix(c(5/8, -1/8, -7/8, 3/8), nrow = 2, ncol = 2)
-    ## myMatrix_object$set(n2)
-    ## cacheSolve(myMatrix_object)
-    ## cacheSolve(myMatrix_object)
+m1 <- matrix(c(1/2, -1/4, -1, 3/4), nrow = 2, ncol = 2)
+I2 <- matrix(c(1,0,0,1), nrow = 2, ncol = 2)
+n1 <- matrix(c(6,2,8,4), nrow = 2, ncol = 2)
+m1 %*% n1
+n1 %*% m1
+solve(m1)
+solve(n1)
+myMatrix_object <- makeCacheMatrix(m1)
+cacheSolve(myMatrix_object)
+cacheSolve(myMatrix_object)
+n2 <- matrix(c(5/8, -1/8, -7/8, 3/8), nrow = 2, ncol = 2)
+myMatrix_object$set(n2)
+cacheSolve(myMatrix_object)
+cacheSolve(myMatrix_object)
 
 ## Resurces ----
 ## https://github.com/lgreski/datasciencectacontent/blob/master/markdown/rprog-breakingDownMakeVector.md
